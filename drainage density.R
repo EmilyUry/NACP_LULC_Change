@@ -1,7 +1,22 @@
 
 
+#' ---
+#' title: "Calculating drainage density for coastal watersheds"
+#' author: "Emily Ury"
+#' date: "June 5, 2020"
+#' output: github_document
+#' ---
+#'
 
 
+#' This script is used to calculate drainage density for different flow types for the
+#' subwatersheds of interest on the north atlantic coastal plain. 
+#' The watershed data was downloaded from NHDPlus which can be accessed:
+#' https://viewer.nationalmap.gov/basic/?basemap=b1&category=nhd&title=NHD%20View#startUp
+#' 
+
+#' Locally the files are found here: 
+setwd("C:/Users/eau6/Desktop/NHD_data")
 
 
 library(rgdal)
@@ -16,7 +31,8 @@ library(rgeos)
 
 
 
-##Loop through the other watersheds of interest
+##read in all of the watersheds of interest
+## this is the catchment area shapefile
 catchment <- readOGR("H0303_catchment.shp")
 catchment <- spTransform(catchment, proj4string(HUCs))
 catchment2 <- readOGR("H0304_catchment.shp")
@@ -40,7 +56,8 @@ catchment10 <- spTransform(catchment10, proj4string(HUCs))
 catchment11 <- readOGR("H0301_catchment.shp")
 catchment11 <- spTransform(catchment11, proj4string(HUCs))
 
-
+### these are the flowlength shapefiles (length in km is already associated with
+### each vector, so there is no need to project the data)
 H0303 <- readOGR("H0303_flowline.shp")
 H0304 <- readOGR("H0304_flowline.shp")
 H0302 <- readOGR("H0302_flowline.shp")
@@ -53,7 +70,7 @@ H0316 <- readOGR("H0316_flowline.shp")
 H1308 <- readOGR("H1308_flowline.shp")
 H0301 <- readOGR("H0301_flowline.shp")
 
-
+watershed <- c("H0303", "H0304", "H0302", "H0315", "H0306", "H0305", "H0307", "H0317", "H0316", "H1308", "H0301")
 
 catchments <- c(catchment, catchment2, catchment3, catchment4, catchment5, catchment6, catchment7,
                 catchment8, catchment9, catchment10, catchment11)
@@ -63,13 +80,10 @@ wsarea <- wsarea*10000 ## km squared
 
 flowlines <- c(H0303, H0304, H0302, H0315, H0306, H0305, H0307, H0317, H0316, H1308, H0301)
 dlength <- sapply(flowlines, function(x) sum(x$LengthKM))  ## unit = km
-watershed <- c("H0303", "H0304", "H0302", "H0315", "H0306", "H0305", "H0307", "H0317", "H0316", "H1308", "H0301")
 t.artificial <- sapply(flowlines, function(x) sum(x$LengthKM[x$FType == "558" |x$FType == "336"]))
 t.natural <- sapply(flowlines, function(x) sum(x$LengthKM[x$FType == "460"]))
 t.coast <- sapply(flowlines, function(x) sum(x$LengthKM[x$FType == "566"]))
 t.other <- sapply(flowlines, function(x) sum(x$LengthKM[x$FType == "334" | x$FType == "428" | x$FType == "420"]))
-
-
 
 summary <- data.frame()
 summary <- list(watershed, wsarea, dlength, dlength/wsarea, t.artificial, t.natural, t.coast, t.other)
