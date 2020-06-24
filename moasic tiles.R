@@ -7,33 +7,23 @@ setwd("C:/Users/eau6/Desktop/NACP_proj")
 
 
 
-tile1 <- "composite2017tile1.tif"
-tile1 <- raster(tile1)
+tile1 <- brick("composite2017tile1.tif")
+
+tile2 <- brick("composite2017tile2.tif")
+
+tile3 <- brick("composite2017tile3.tif")
+
+tile4 <- brick("composite2017tile4.tif")
+
+tile9 <- brick("composite2017tile9.tif")
+
+m1 <- merge(tile1, tile2, tile3, tile4, tile9, fun = mean)
+
+writeRaster(m1, "region1.tif", overwrite = T)
 
 
-plot(tile1, ylim = c(34,38), xlim = c(-77, 75))
 
 
-
-
-tile2 <- "composite2017tile2.tif"
-tile2 <- raster(tile2)
-plot(tile2, add = T)
-
-tile3 <- "composite2017tile3.tif"
-tile3 <- raster(tile3)
-plot(tile3)
-
-tile4 <- "composite2017tile4.tif"
-tile4 <- raster(tile4)
-plot(tile4)
-
-tile9 <- "composite2017tile9.tif"
-tile9 <- raster(tile9)
-plot(tile9)
-
-m1 <- mosaic(tile1, tile2, tile3, tile4, tile9, fun = mean)
-writeRaster(m1, "region1.tif")
 
 plot(m1, col = "darkgreen")
 
