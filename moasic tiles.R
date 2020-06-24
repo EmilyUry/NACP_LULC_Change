@@ -33,6 +33,8 @@ tile9 <- raster(tile9)
 plot(tile9)
 
 m1 <- mosaic(tile1, tile2, tile3, tile4, tile9, fun = mean)
+writeRaster(m1, "region1.tif")
+
 plot(m1, col = "darkgreen")
 
 
@@ -48,3 +50,19 @@ m.all <- mosaic(tile1, tile2, tile3, tile4, tile9, tile5, tile6, tile7, tile7a, 
                 tile11, fun = mean)
 plot(m.all, col = "darkgreen")
 plot(m1, col = "blue", add = T)
+
+
+writeRaster(m.all, "bothwatersheds.tif")
+
+
+
+
+
+
+vps <- read.csv("sample2017vps.csv", head = T)
+points(vps$x, vps$y, pch = "+", cex = 0.5)
+
+
+
+
+plot(m1)
