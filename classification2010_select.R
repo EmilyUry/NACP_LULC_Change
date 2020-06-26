@@ -23,8 +23,8 @@ cols <- c("palegreen4", "aquamarine3", "lightgoldenrod1", "brown3", "burlywood4"
 raster <- raster("NL_trim.tif")
 plot(raster)
 
-vps <- read.csv("2017vps_select.csv", head = T)
-vps <- vps[which(vps$type != "Ghost"),]
+vps <- read.csv("2010vps_select.csv", head = T)
+
 points(vps$x, vps$y, pch = "+", cex = 0.3)
 
 stack <- brick("NL_trim.tif")
@@ -78,11 +78,11 @@ modelRF <- randomForest(x=valuetable[,c(1:12)], y=valuetable$class, importance =
 
 names(stack)
 names(valuetable) ## these must match
-map17 <- predict(stack, model=modelRF, na.rm=TRUE)
-plot(map17, col = cols, legend = FALSE)
+map10 <- predict(stack, model=modelRF, na.rm=TRUE)
+plot(map10, col = cols, legend = FALSE)
 
 
-writeRaster(map17, filename="classified2017_select", format="GTiff", overwrite=TRUE)
+writeRaster(map10, filename="classified2017_select", format="GTiff", overwrite=TRUE)
 
 
 C301 <- st_read("CP_301export.shp")
