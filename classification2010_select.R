@@ -17,17 +17,17 @@ cols <- c("palegreen4", "aquamarine3", "lightgoldenrod1", "brown3", "burlywood4"
 # R1 <- brick("composite2010_R1.tif")
 # R2 <- brick("composite2010_R2.tif")
 # m.all <- mosaic(R1, R2, fun = mean)
-# writeRaster(m.all, "NL_trim.tif", overwrite = T)
+# writeRaster(m.all, "NL_trim_2010.tif", overwrite = T)
 
 
-raster <- raster("NL_trim.tif")
+raster <- raster("NL_trim_2010.tif")
 plot(raster)
 
 vps <- read.csv("2010vps_select.csv", head = T)
 
 points(vps$x, vps$y, pch = "+", cex = 0.3)
 
-stack <- brick("NL_trim.tif")
+stack <- brick("NL_trim_2010.tif")
 names(stack)
 
 
@@ -82,7 +82,7 @@ map10 <- predict(stack, model=modelRF, na.rm=TRUE)
 plot(map10, col = cols, legend = FALSE)
 
 
-writeRaster(map10, filename="classified2017_select", format="GTiff", overwrite=TRUE)
+writeRaster(map10, filename="classified2010_select", format="GTiff", overwrite=TRUE)
 
 
 C301 <- st_read("CP_301export.shp")
