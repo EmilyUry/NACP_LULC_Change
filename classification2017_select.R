@@ -14,19 +14,19 @@ cols <- c("palegreen4", "aquamarine3", "lightgoldenrod1", "brown3", "burlywood4"
 ### Mosaic regions
 #____Do this first, only once
 
-# R1 <- brick("composite2017_R1.tif")
-# R2 <- brick("composite2017_R2.tif")
-# m.all <- mosaic(R1, R2, fun = mean)
-# writeRaster(m.all, "NL_trim.tif", overwrite = T)
+#R1 <- brick("composite2017_R1.tif")
+#R2 <- brick("composite2017_R2.tif")
+#m.all <- mosaic(R1, R2, fun = mean)
+#writeRaster(m.all, "NL_trim_2017.tif", overwrite = T)
 
 
-raster <- raster("NL_trim.tif")
+raster <- raster("NL_trim_2017.tif")
 plot(raster)
 
 vps <- read.csv("2017vps_select.csv", head = T)
 points(vps$x, vps$y, pch = "+", cex = 0.3)
 
-stack <- brick("NL_trim.tif")
+stack <- brick("NL_trim_2017.tif")
 names(stack)
 
 
@@ -52,7 +52,7 @@ valuetable$class <- factor(valuetable$class, levels = c(1:6))
 
 
 ##### make the RF model
-set.seed(123)
+set.seed(1234)
 valuetable$random = sample(2, nrow(valuetable), replace=TRUE, prob=c(0.8,0.2))
 trainData = valuetable[valuetable$random==1,]
 testData = valuetable[valuetable$random==2,]
