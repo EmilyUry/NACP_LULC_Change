@@ -216,6 +216,53 @@ Cat10 <- c(rep(rep6, 5))
 list <- c("Forest", "Marsh", "Ghost", "Shrub", "Sand", "Water")
 Cat17 <- c(rep(list, 30))
 
-
 summary <- cbind(Cat96, Cat10, Cat17, freq)
+
+dt <- as.data.frame(summary)
+dt$freq <- as.numeric(dt$freq)
+
+alluvial(dt[,1:3], freq = dt$freq)
+
+alluvial(dt[,1:3], freq = dt$freq, hide = dt$freq <30000)
+
+
+
+
+dt[dt=="Forest"] <- "aForest"
+dt[dt=="Ghost"] <- "bGhost"
+dt[dt=="Shrub"] <- "cShrub"
+dt[dt=="Marsh"] <- "dMarsh"
+dt[dt=="Sand"] <- NA
+dt <- na.omit(dt)
+
+### options
+alluvial(dt[,1:3], freq = dt$freq, hide = dt$freq <13500,
+         col = ifelse(dt$Cat17 == "bGhost", "brown3", 
+                      ifelse(dt$Cat17 == "cShrub", "burlywood4", 
+                             ifelse(dt$Cat17 == "dMarsh", "lightgoldenrod", "palegreen4"))),
+         border = ifelse(dt$Cat17 == "bGhost", "brown3", 
+                           ifelse(dt$Cat17 == "cShrub", "burlywood4", 
+                                  ifelse(dt$Cat17 == "dMarsh", "lightgoldenrod", "palegreen4"))),
+         gap.width = 0.1)
+
+
+
+
+alluvial(dt[,1:3], freq = dt$freq, hide = dt$freq <5000,
+         col = ifelse(dt$Cat17 == "bGhost", "brown3", 
+                      ifelse(dt$Cat17 == "cShrub", "burlywood4", 
+                             ifelse(dt$Cat17 == "dMarsh", "lightgoldenrod", "palegreen4"))),
+         border = ifelse(dt$Cat17 == "bGhost", "brown3", 
+                         ifelse(dt$Cat17 == "cShrub", "burlywood4", 
+                                ifelse(dt$Cat17 == "dMarsh", "lightgoldenrod", "palegreen4"))),
+         gap.width = 0.1)
+
+### 
+alluvial(dt[,1:3], freq = dt$freq, hide = dt$freq <10000,
+         col = ifelse(dt$Cat17 == "bGhost", "brown3", "grey"),
+         gap.width = 0.2)
+
+
+
+cols <- c("palegreen4", "aquamarine3", "lightgoldenrod1", "brown3", "burlywood4", "gray80")
 
