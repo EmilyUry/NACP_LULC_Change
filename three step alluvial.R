@@ -76,14 +76,10 @@ data[which(data$m96 == 1),] <- 2  ## combines pine and deciduous into "forest" c
 data[which(data$m10 == 1),] <- 2
 data[which(data$m17 == 1),] <- 2
 
-data[which(data$m96 == 0),] <- 7
+data[which(data$m96 == 0),] <- 7   ## makes water number 7
 data[which(data$m10 == 0),] <- 7
 data[which(data$m17 == 0),] <- 7
 
-forest <- vector()
-for (i in 2:7){
-  forest[i] <- nrow(data[which(data$m96==2 & data$m10==i),])
-}
 
 forest <- vector()
 marsh <- vector()
@@ -223,15 +219,15 @@ alluvial(dt[,1:3], freq = dt$freq, hide = dt$freq <30000)
 
 
 
-dt[dt=="Forest"] <- "aForest"
+dt[dt=="Forest"] <- "aForest"  ## alphabatizes so the bars stack in the order I want them too
 dt[dt=="Ghost"] <- "bGhost"
 dt[dt=="Shrub"] <- "cShrub"
 dt[dt=="Marsh"] <- "dMarsh"
-dt[dt=="Sand"] <- NA
+dt[dt=="Sand"] <- NA          ## omit this class from the alluvial plot
 dt <- na.omit(dt)
 
-### options
-alluvial(dt[,1:3], freq = dt$freq, hide = dt$freq <13500,
+### options -- lots of colors
+alluvial(dt[,1:3], freq = dt$freq, hide = dt$freq <13500,     #### hide, threshold for small lines -- play around with this
          col = ifelse(dt$Cat17 == "bGhost", "brown3", 
                       ifelse(dt$Cat17 == "cShrub", "burlywood4", 
                              ifelse(dt$Cat17 == "dMarsh", "lightgoldenrod", "palegreen4"))),
@@ -242,7 +238,7 @@ alluvial(dt[,1:3], freq = dt$freq, hide = dt$freq <13500,
 
 
 
-
+### options -- lots of colors, lower threshold 
 alluvial(dt[,1:3], freq = dt$freq, hide = dt$freq <5000,
          col = ifelse(dt$Cat17 == "bGhost", "brown3", 
                       ifelse(dt$Cat17 == "cShrub", "burlywood4", 
@@ -252,7 +248,7 @@ alluvial(dt[,1:3], freq = dt$freq, hide = dt$freq <5000,
                                 ifelse(dt$Cat17 == "dMarsh", "lightgoldenrod", "palegreen4"))),
          gap.width = 0.1)
 
-### 
+### fewer colors
 alluvial(dt[,1:3], freq = dt$freq, hide = dt$freq <10000,
          col = ifelse(dt$Cat17 == "bGhost", "brown3", "grey"),
          gap.width = 0.2)
