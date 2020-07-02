@@ -2,7 +2,9 @@
 
 ## three step alluvial
 
-
+map17 <- raster("classified2017_select.tif")
+map10 <- raster("classified2010_select.tif")
+map10 <- raster("classified1996_select.tif")
 
 map17 <- crop(extend(map17, map96), map96) 
 map10 <- crop(extend(map10, map96), map96) 
@@ -29,13 +31,13 @@ write.csv(data, file= "three_year_data.csv")
 # all.data[is.na(all.data)] <- 0
 # data <- all.data[which(all.data$y10 != 0),]
 
-w96 <- nrow(data[which(data$m96 == 0),])
-p96 <- nrow(data[which(data$m96 == 1),])
-m96 <- nrow(data[which(data$m96 == 2),])
-h96 <- nrow(data[which(data$m96 == 3),])
-g96 <- nrow(data[which(data$m96 == 4),])
-s96 <- nrow(data[which(data$m96 == 5),])
-b96 <- nrow(data[which(data$m96 == 6),])
+w96 <- nrow(data[which(data$m96 == 0),])  #water
+p96 <- nrow(data[which(data$m96 == 1),])  #pine
+m96 <- nrow(data[which(data$m96 == 2),])  #mixed/deciduous
+h96 <- nrow(data[which(data$m96 == 3),])  #herbacious/marsh
+g96 <- nrow(data[which(data$m96 == 4),])  #ghost forest
+s96 <- nrow(data[which(data$m96 == 5),])  #shrub scrub
+b96 <- nrow(data[which(data$m96 == 6),])  #sand/beach
 
 w10 <- nrow(data[which(data$m10 == 0),])
 p10 <- nrow(data[which(data$m10 == 1),])
@@ -60,24 +62,17 @@ y17.total <- c(p17+m17, h17, g17, s17, b17, w17)
 # y10.total <- c(1087910+1597296, 623630, 4760, 577676, 1756, 0)
 # y17.total <- c(1750402+ 973871, 580608, 74766, 502431, 705, 10245)
 # 
-# y10.ha <- y10.total*0.09
+# y10.ha <- y10.total*0.09  ## conversion to hectares
 # y17.ha <- y17.total*0.09
 
 ##set <- data.frame(type, y10.ha, y17.ha)
 set <- data.frame(type, y96.total, y10.total, y17.total)
 set
 
-
-
 library(alluvial)
 
 
-f <- rep("Forest", 36)
-g <- rep("Ghost",36)
-l <-list(f,g)
-
-
-data[which(data$m96 == 1),] <- 2
+data[which(data$m96 == 1),] <- 2  ## combines pine and deciduous into "forest" class
 data[which(data$m10 == 1),] <- 2
 data[which(data$m17 == 1),] <- 2
 
