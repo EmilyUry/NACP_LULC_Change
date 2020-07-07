@@ -28,8 +28,6 @@ head(data)
 names(data) <- c("x", "y", "m96", "m01", "m06", 'm10')
 #table(data$m96)
 
-str(data)
-
 ### key
 # 0 = Background          -> # 0 = other
 # 1 = Unclassified        -> # 0 = other
@@ -56,62 +54,84 @@ str(data)
 # 22 = Palustrine aquatic -> # 23 = water veg
 # 23 = Estuarine aq bed   -> # 23 = water veg
 
-data[which(data$m96 == 0),] <- 25
-head(data)
 
-for (i in 3:6){
-data[which(data[,i] == 1),] <- 25 ## other = b = 2
- 
-#data[which(data[,i] == 2),] <- 2 
-data[which(data[,i] == 3),] <- 2  ## urban = e
-data[which(data[,i] == 4),] <- 2 
-data[which(data[,i] == 5),] <- 2 
-data[which(data[,i] == 6),] <- 7 ## ag = d
-#data[which(data[,i] == 7),] <- 7
-#data[which(data[,i] == 8),] <- 8 ## other veg = a
-data[which(data[,i] == 9),] <- 8  
-data[which(data[,i] == 10),] <- 8  
-data[which(data[,i] == 11),] <- 8 
-data[which(data[,i] == 12),] <- 8 
-#data[which(data[,i] == 13),] <- 13  ## palustrine forest = c
-#data[which(data[,i] == 14),] <- 14
-data[which(data[,i] == 15),] <- 14  ## other wetland = f
-data[which(data[,i] == 16),] <- 14
-data[which(data[,i] == 17),] <- 14
-data[which(data[,i] == 18),] <- 14
-#data[which(data[,i] == 21),] <- 21  ## 21 = water = g
-data[which(data[,i] == 19),] <- 20 ## near water = h
-#data[which(data[,i] == 20),] <- 20
-data[which(data[,i] == 22),] <- 23 ## water veg = i
-}
+### combine classes
+data[data==0]<- NA
+data[is.na(data)] <- 25 ## other = b = 2
+data[data==1]<- NA
+data[is.na(data)] <- 25
+data[data==2]<- NA
+data[is.na(data)] <- 26 ## urban = e = 5
+data[data==3]<- NA
+data[is.na(data)] <- 26
+data[data==4]<- NA
+data[is.na(data)] <- 26 
+data[data==5]<- NA
+data[is.na(data)] <- 26
+data[data==6]<- NA
+data[is.na(data)] <- 27 ## ag = d = 4
+data[data==7]<- NA
+data[is.na(data)] <- 27
+data[data==8]<- NA
+data[is.na(data)] <- 28 ## other veg = a = 1
+data[data==9]<- NA
+data[is.na(data)] <- 28
+data[data==10]<- NA
+data[is.na(data)] <- 28 
+data[data==11]<- NA
+data[is.na(data)] <- 28
+data[data==12]<- NA
+data[is.na(data)] <- 28 
+data[data==13]<- NA
+data[is.na(data)] <- 29 ## palustrine forest = c = 3
+data[data==14]<- NA
+data[is.na(data)] <- 30 ## other wetland = f = 6
+data[data==15]<- NA
+data[is.na(data)] <- 30
+data[data==16]<- NA
+data[is.na(data)] <- 30 
+data[data==17]<- NA
+data[is.na(data)] <- 30
+data[data==18]<- NA
+data[is.na(data)] <- 30 
+data[data==19]<- NA
+data[is.na(data)] <- 31 ## near water = h = 8
+data[data==20]<- NA
+data[is.na(data)] <- 31 
+data[data==21]<- NA
+data[is.na(data)] <- 32 ## water = g = 7
+data[data==22]<- NA
+data[is.na(data)] <- 33 ## water veg = i = 9
+data[data==23]<- NA
+data[is.na(data)] <- 33
 
-head(data)
-#table(data$m96)
+### rename/reorder classes, now they are in order of total class size (decending), 
+### this will be helpful for the alluv plot
+data[data==25]<- NA
+data[is.na(data)] <- 2 
+data[data==26]<- NA
+data[is.na(data)] <- 5
+data[data==27]<- NA
+data[is.na(data)] <- 4 
+data[data==28]<- NA
+data[is.na(data)] <- 1
+data[data==29]<- NA
+data[is.na(data)] <- 3 
+data[data==30]<- NA
+data[is.na(data)] <- 6
+data[data==31]<- NA
+data[is.na(data)] <- 8 
+data[data==32]<- NA
+data[is.na(data)] <- 7
+data[data==33]<- NA
+data[is.na(data)] <- 9
 
-## rename/reorder(1 = a = largest class)
-for (i in 3:6){
-  data[which(data[,i] == 2),] <- 5
-  data[which(data[,i] == 8),] <- 1
-  data[which(data[,i] == 13),] <- 3
-  data[which(data[,i] == 7),] <- 4
-  data[which(data[,i] == 14),] <- 6
-  data[which(data[,i] == 23),] <- 9}
-head(data)
-
-for (i in 3:6){
-  data[which(data[,i] == 0),] <- 2
-  data[which(data[,i] == 21),] <- 7
-  data[which(data[,i] == 21),] <- 8}
-head(data)
-#table(data$m96)
-
+table(data$m96)
 
 df <- data ### save this in case you f it up
-
 data <- df
   
 ###Create empty vectors
-
 aa <- vector()
 ab <- vector()
 ac <- vector()
@@ -124,16 +144,15 @@ ai <- vector()
 
 
 ##### so this is what you have to do
-##### run lines 130 through 332  **9 times through**
-##### replace numbers 1 through 9 for the value of "apple" (line 130 )
-##### after it runs, comment in the corresponding list from lines 336 through 344 to
-##### save the returned vectors, (should be length = 81)
+##### run lines 155 through 356  **9 times through**
+##### replace numbers 1 through 9 for the value of "apple" (line 155 )
+##### after it runs, comment in the corresponding list from lines 348 through 356 to
+##### save the returned vectors, (should be length = 729)
 ##### wash, rinse, repeat
-##### takes a few minutes to run it through each time...
+##### takes about 7 minutes to run it through each time...
 
-
-apple <- 2
-
+# writes out the list for m96 = 1
+{apple <- 1
 for (i in 1:9){
   aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 1),]
   aa[i] <- nrow(aaa[which(aaa$m10==i),])
@@ -155,202 +174,1927 @@ for (i in 1:9){
   ai[i] <- nrow(aaa[which(aaa$m10==i),])
   }
 apple.a <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
-
 for (i in 1:9){
-  aaa <- data[which(data$m96 == 1 & data$m01 == 2 & data$m06 == 1),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 1),]
   aa[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 2 & data$m06 == 2),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 2),]
   ab[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 2 & data$m06 == 3),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 3),]
   ac[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 2 & data$m06 == 4),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 4),]
   ad[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 2 & data$m06 == 5),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 5),]
   ae[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 2 & data$m06 == 6),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 6),]
   af[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 2 & data$m06 == 7),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 7),]
   ag[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 2 & data$m06 == 8),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 8),]
   ah[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 2 & data$m06 == 9),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 9),]
   ai[i] <- nrow(aaa[which(aaa$m10==i),])
 }
 apple.b <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
-
-
 for (i in 1:9){
-  aaa <- data[which(data$m96 == 1 & data$m01 == 3 & data$m06 == 1),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 1),]
   aa[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 3 & data$m06 == 2),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 2),]
   ab[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 3 & data$m06 == 3),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 3),]
   ac[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 3 & data$m06 == 4),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 4),]
   ad[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 3 & data$m06 == 5),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 5),]
   ae[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 3 & data$m06 == 6),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 6),]
   af[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 3 & data$m06 == 7),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 7),]
   ag[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 3 & data$m06 == 8),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 8),]
   ah[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 3 & data$m06 == 9),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 9),]
   ai[i] <- nrow(aaa[which(aaa$m10==i),])
 }
 apple.c <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
-
 for (i in 1:9){
-  aaa <- data[which(data$m96 == 1 & data$m01 == 4 & data$m06 == 1),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 1),]
   aa[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 4 & data$m06 == 2),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 2),]
   ab[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 4 & data$m06 == 3),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 3),]
   ac[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 4 & data$m06 == 4),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 4),]
   ad[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 4 & data$m06 == 5),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 5),]
   ae[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 4 & data$m06 == 6),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 6),]
   af[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 4 & data$m06 == 7),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 7),]
   ag[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 4 & data$m06 == 8),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 8),]
   ah[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 4 & data$m06 == 9),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 9),]
   ai[i] <- nrow(aaa[which(aaa$m10==i),])
 }
 apple.d <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
-
-
 for (i in 1:9){
-  aaa <- data[which(data$m96 == 1 & data$m01 == 5 & data$m06 == 1),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 1),]
   aa[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 5 & data$m06 == 2),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 2),]
   ab[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 5 & data$m06 == 3),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 3),]
   ac[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 5 & data$m06 == 4),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 4),]
   ad[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 5 & data$m06 == 5),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 5),]
   ae[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 5 & data$m06 == 6),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 6),]
   af[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 5 & data$m06 == 7),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 7),]
   ag[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 5 & data$m06 == 8),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 8),]
   ah[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 5 & data$m06 == 9),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 9),]
   ai[i] <- nrow(aaa[which(aaa$m10==i),])
 }
 apple.e <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
-
-
 for (i in 1:9){
-  aaa <- data[which(data$m96 == 1 & data$m01 == 6 & data$m06 == 1),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 1),]
   aa[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 6 & data$m06 == 2),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 2),]
   ab[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 6 & data$m06 == 3),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 3),]
   ac[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 6 & data$m06 == 4),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 4),]
   ad[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 6 & data$m06 == 5),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 5),]
   ae[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 6 & data$m06 == 6),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 6),]
   af[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 6 & data$m06 == 7),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 7),]
   ag[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 6 & data$m06 == 8),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 8),]
   ah[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 6 & data$m06 == 9),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 9),]
   ai[i] <- nrow(aaa[which(aaa$m10==i),])
 }
 apple.f <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
-
-
 for (i in 1:9){
-  aaa <- data[which(data$m96 == 1 & data$m01 == 7 & data$m06 == 1),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 1),]
   aa[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 7 & data$m06 == 2),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 2),]
   ab[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 7 & data$m06 == 3),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 3),]
   ac[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 7 & data$m06 == 4),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 4),]
   ad[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 7 & data$m06 == 5),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 5),]
   ae[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 7 & data$m06 == 6),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 6),]
   af[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 7 & data$m06 == 7),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 7),]
   ag[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 7 & data$m06 == 8),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 8),]
   ah[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 7 & data$m06 == 9),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 9),]
   ai[i] <- nrow(aaa[which(aaa$m10==i),])
 }
 apple.g <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
-
 for (i in 1:9){
-  aaa <- data[which(data$m96 == 1 & data$m01 == 8 & data$m06 == 1),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 1),]
   aa[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 8 & data$m06 == 2),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 2),]
   ab[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 8 & data$m06 == 3),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 3),]
   ac[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 8 & data$m06 == 4),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 4),]
   ad[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 8 & data$m06 == 5),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 5),]
   ae[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 8 & data$m06 == 6),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 6),]
   af[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 8 & data$m06 == 7),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 7),]
   ag[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 8 & data$m06 == 8),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 8),]
   ah[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 8 & data$m06 == 9),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 9),]
   ai[i] <- nrow(aaa[which(aaa$m10==i),])
 }
 apple.h <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
-
 for (i in 1:9){
-  aaa <- data[which(data$m96 == 1 & data$m01 == 9 & data$m06 == 1),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 1),]
   aa[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 9 & data$m06 == 2),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 2),]
   ab[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 9 & data$m06 == 3),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 3),]
   ac[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 9 & data$m06 == 4),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 4),]
   ad[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 9 & data$m06 == 5),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 5),]
   ae[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 9 & data$m06 == 6),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 6),]
   af[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 9 & data$m06 == 7),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 7),]
   ag[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 9 & data$m06 == 8),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 8),]
   ah[i] <- nrow(aaa[which(aaa$m10==i),])
-  aaa <- data[which(data$m96 == 1 & data$m01 == 9 & data$m06 == 9),]
+  aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 9),]
   ai[i] <- nrow(aaa[which(aaa$m10==i),])
 }
 apple.i <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+list1 <- c(apple.a, apple.b, apple.c, apple.d, apple.e, apple.f, apple.g, apple.h, apple.i)
+}
 
+# writes out the list for m96 = 2
+{apple <- 2
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.a <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.b <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.c <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.d <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.e <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.f <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.g <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.h <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.i <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+list2 <- c(apple.a, apple.b, apple.c, apple.d, apple.e, apple.f, apple.g, apple.h, apple.i)
+}
 
+# writes out the list for m96 = 3
+{apple <- 3
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.a <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.b <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.c <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.d <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.e <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.f <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.g <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.h <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.i <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  list3 <- c(apple.a, apple.b, apple.c, apple.d, apple.e, apple.f, apple.g, apple.h, apple.i)
+}
 
-# list1 <- c(apple.a, apple.b, apple.c, apple.d, apple.e, apple.f, apple.g, apple.h, apple.i)
- list2 <- c(apple.a, apple.b, apple.c, apple.d, apple.e, apple.f, apple.g, apple.h, apple.i)
-# list3 <- c(apple.a, apple.b, apple.c, apple.d, apple.e, apple.f, apple.g, apple.h, apple.i)
-# list4 <- c(apple.a, apple.b, apple.c, apple.d, apple.e, apple.f, apple.g, apple.h, apple.i)
-# list5 <- c(apple.a, apple.b, apple.c, apple.d, apple.e, apple.f, apple.g, apple.h, apple.i)
-# list6 <- c(apple.a, apple.b, apple.c, apple.d, apple.e, apple.f, apple.g, apple.h, apple.i)
-# list7 <- c(apple.a, apple.b, apple.c, apple.d, apple.e, apple.f, apple.g, apple.h, apple.i)
-# list8 <- c(apple.a, apple.b, apple.c, apple.d, apple.e, apple.f, apple.g, apple.h, apple.i)
-# list9 <- c(apple.a, apple.b, apple.c, apple.d, apple.e, apple.f, apple.g, apple.h, apple.i)
+# writes out the list for m96 = 4
+{apple <- 4
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.a <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.b <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.c <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.d <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.e <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.f <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.g <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.h <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.i <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  list4 <- c(apple.a, apple.b, apple.c, apple.d, apple.e, apple.f, apple.g, apple.h, apple.i)
+}
+
+# writes out the list for m96 = 5
+{apple <- 4
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.a <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.b <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.c <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.d <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.e <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.f <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.g <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.h <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.i <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  list4 <- c(apple.a, apple.b, apple.c, apple.d, apple.e, apple.f, apple.g, apple.h, apple.i)
+}
+
+# writes out the list for m96 = 5
+{apple <- 5
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.a <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.b <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.c <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.d <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.e <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.f <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.g <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.h <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.i <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  list5 <- c(apple.a, apple.b, apple.c, apple.d, apple.e, apple.f, apple.g, apple.h, apple.i)
+}
+
+# writes out the list for m96 = 5
+{apple <- 6
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.a <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.b <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.c <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.d <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.e <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.f <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.g <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.h <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.i <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  list6 <- c(apple.a, apple.b, apple.c, apple.d, apple.e, apple.f, apple.g, apple.h, apple.i)
+}
+
+# writes out the list for m96 = 5
+{apple <- 7
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.a <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.b <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.c <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.d <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.e <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.f <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.g <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.h <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.i <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  list7 <- c(apple.a, apple.b, apple.c, apple.d, apple.e, apple.f, apple.g, apple.h, apple.i)
+}
+
+# writes out the list for m96 = 5
+{apple <- 8
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.a <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.b <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.c <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.d <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.e <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.f <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.g <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.h <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.i <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  list8 <- c(apple.a, apple.b, apple.c, apple.d, apple.e, apple.f, apple.g, apple.h, apple.i)
+}
+
+# writes out the list for m96 = 5
+{apple <- 9
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 1 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.a <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 2 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.b <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 3 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.c <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 4 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.d <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 5 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.e <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 6 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.f <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 7 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.g <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 8 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.h <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  for (i in 1:9){
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 1),]
+    aa[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 2),]
+    ab[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 3),]
+    ac[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 4),]
+    ad[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 5),]
+    ae[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 6),]
+    af[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 7),]
+    ag[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 8),]
+    ah[i] <- nrow(aaa[which(aaa$m10==i),])
+    aaa <- data[which(data$m96 == apple & data$m01 == 9 & data$m06 == 9),]
+    ai[i] <- nrow(aaa[which(aaa$m10==i),])
+  }
+  apple.i <- c(aa, ab, ac, ad, ae, af, ag, ah, ai)
+  list9 <- c(apple.a, apple.b, apple.c, apple.d, apple.e, apple.f, apple.g, apple.h, apple.i)
+}
 
 mega.list <- c(list1, list2, list3, list4, list5, list6, list7, list8, list9)
-freq <- mega.list
+freq <- mega.list  ## should be length 6561
 
+## creates the label column for each year
 c96 <- c(rep("a", 729), rep("b", 729), rep("c", 729),
            rep("d", 729), rep("e", 729), rep("f", 729), 
            rep("g", 729), rep("h", 729), rep("i", 729))
@@ -365,9 +2109,58 @@ rep9 <- c(rep("a", 9), rep("b", 9), rep("c", 9),
           rep("g", 9), rep("h", 9), rep("i", 9))
 c06 <- c(rep(rep9, 81))
 
-list <- c("a", "b", "c", "d", "e", "f", "g", "h", i)
+list <- c("a", "b", "c", "d", "e", "f", "g", "h", "i")
 c10 <- c(rep(list, 729))
 
 summary <- cbind(c96, c01, c06, c10, freq)
  
+write.csv(summary, file = "TRY_alluv_data.csv")
+
+##### read in the data frame here if you want
+# dt <- read.csv("Try_alluv_data.csv", head = T)
+
+dt <- as.data.frame(summary)
+dt$freq <- as.numeric(dt$freq)
+head(dt)
+
+alluvial(dt[,1:4], freq = dt$freq)
+
+alluvial(dt[,1:4], freq = dt$freq, hide = dt$freq <5000, 
+         col = "gray70", 
+         border = "gray20")
+
+
+### just the pixels that are changing: cp = changing pixels
+
+cp <- dt[which(dt$c96 != dt$c10),]
+alluvial(cp[,1:4], freq = cp$freq, hide = cp$freq <10000, 
+         col = "gray70", 
+         border = "gray20")
+
+
+#### some color
+
+alluvial(cp[,1:4], freq = cp$freq, hide = cp$freq <10000,    #### hide, threshold for small lines -- play around with this
+         col = ifelse(cp$c96 == "a", "darkgreen", 
+                      ifelse(cp$c96 == "c", "aquamarine3", 
+                             ifelse(cp$c96 == "d", "lightgoldenrod", "burlywood4"))),
+         border = ifelse(cp$c96 == "a", "darkgreen", 
+                         ifelse(cp$c96 == "c", "aquamarine3", 
+                                ifelse(cp$c96 == "d", "lightgoldenrod", "burlywood4"))),
+         gap.width = 0.1)
+
+### here is a reminder of the key
+# a = other veg
+# b = other
+# c = palustrine forest
+# d = ag
+# e = urban
+# f = other wetland
+# g = water
+# h = shore/barren
+# i = aquatic veg
+
+
+
+
 
