@@ -4,7 +4,7 @@
 
 map17 <- raster("classified2017_select.tif")
 map10 <- raster("classified2010_select.tif")
-map10 <- raster("classified1996_select.tif")
+map96 <- raster("classified1996_select.tif")
 
 map17 <- crop(extend(map17, map96), map96) 
 map10 <- crop(extend(map10, map96), map96) 
@@ -18,18 +18,18 @@ names(data) <- c("x", "y", "m96", "m10", "m17")
 data[is.na(data)] <- 0
 data <- data[which(data$m96 != 0),]
 table(data$m96)
-
-write.csv(data, file= "three_year_data.csv")
-
-
+# 
+# write.csv(data, file= "three_year_data.csv")
 
 
+
+# 
 # all.data <- read.csv("three_year_data.csv", head = T)
 # head(all.data)
 # names(all.data) <- c("no","x", "y", "m96", "m10", "m17")
-# 
-# all.data[is.na(all.data)] <- 0
-# data <- all.data[which(all.data$y10 != 0),]
+
+#all.data[is.na(all.data)] <- 0
+#data <- all.data[which(all.data$y10 != 0),]
 
 w96 <- nrow(data[which(data$m96 == 0),])  #water
 p96 <- nrow(data[which(data$m96 == 1),])  #pine
@@ -67,18 +67,24 @@ y17.total <- c(p17+m17, h17, g17, s17, b17, w17)
 
 ##set <- data.frame(type, y10.ha, y17.ha)
 set <- data.frame(type, y96.total, y10.total, y17.total)
-set
+set  #### this could be used to make a simple stacked bar plot...
 
 library(alluvial)
 
 
-data[which(data$m96 == 1),] <- 2  ## combines pine and deciduous into "forest" class
-data[which(data$m10 == 1),] <- 2
-data[which(data$m17 == 1),] <- 2
+data[data==0]<- NA
+data[is.na(data)] <- 7 ## makes water # 7
 
-data[which(data$m96 == 0),] <- 7   ## makes water number 7
-data[which(data$m10 == 0),] <- 7
-data[which(data$m17 == 0),] <- 7
+data[data==1]<- NA
+data[is.na(data)] <- 2 ## combines pine and deciduous into "forest" class
+
+# data[which(data$m96 == 1),] <- 2  ## combines pine and deciduous into "forest" class
+# data[which(data$m10 == 1),] <- 2
+# data[which(data$m17 == 1),] <- 2
+# 
+# data[which(data$m96 == 0),] <- 7   ## makes water number 7
+# data[which(data$m10 == 0),] <- 7
+# data[which(data$m17 == 0),] <- 7
 
 
 forest <- vector()
@@ -141,22 +147,22 @@ for (i in 2:7){
 Ghost96 <- c(forest[2:7], marsh[2:7], ghost[2:7], shrub[2:7], sand[2:7], water[2:7])
 Ghost96
 
-for (i in 2:7){
-  FF <- data[which(data$m96 == 4 & data$m10 == 2),]
-  forest[i] <- nrow(FF[which(FF$m17==i),])
-  FM <- data[which(data$m96 == 4 & data$m10 == 3),]
-  marsh[i] <- nrow(FM[which(FM$m17==i),])
-  FG <-data[which(data$m96 == 4 & data$m10 == 4),]
-  ghost[i] <- nrow(FG[which(FG$m17==i),])
-  FSh <-data[which(data$m96 == 4 & data$m10 == 5),]
-  shrub[i] <- nrow(FSh[which(FSh$m17==i),])
-  FSa <- data[which(data$m96 == 4 & data$m10 == 6),]
-  sand[i] <- nrow(FSa[which(FSa$m17==i),])
-  FW <-  data[which(data$m96 == 4 & data$m10 == 7),]
-  water[i] <- nrow(FW[which(FW$m17==i),])
-}
-Ghost96 <- c(forest[2:7], marsh[2:7], ghost[2:7], shrub[2:7], sand[2:7], water[2:7])
-Ghost96
+# for (i in 2:7){
+#   FF <- data[which(data$m96 == 4 & data$m10 == 2),]
+#   forest[i] <- nrow(FF[which(FF$m17==i),])
+#   FM <- data[which(data$m96 == 4 & data$m10 == 3),]
+#   marsh[i] <- nrow(FM[which(FM$m17==i),])
+#   FG <-data[which(data$m96 == 4 & data$m10 == 4),]
+#   ghost[i] <- nrow(FG[which(FG$m17==i),])
+#   FSh <-data[which(data$m96 == 4 & data$m10 == 5),]
+#   shrub[i] <- nrow(FSh[which(FSh$m17==i),])
+#   FSa <- data[which(data$m96 == 4 & data$m10 == 6),]
+#   sand[i] <- nrow(FSa[which(FSa$m17==i),])
+#   FW <-  data[which(data$m96 == 4 & data$m10 == 7),]
+#   water[i] <- nrow(FW[which(FW$m17==i),])
+# }
+# Ghost96 <- c(forest[2:7], marsh[2:7], ghost[2:7], shrub[2:7], sand[2:7], water[2:7])
+# Ghost96
 
 
 for (i in 2:7){
@@ -240,13 +246,15 @@ alluvial(dt[,1:3], freq = dt$freq, hide = dt$freq <13500,     #### hide, thresho
 
 ### options -- lots of colors, lower threshold 
 alluvial(dt[,1:3], freq = dt$freq, hide = dt$freq <5000,
-         col = ifelse(dt$Cat17 == "bGhost", "brown3", 
-                      ifelse(dt$Cat17 == "cShrub", "burlywood4", 
-                             ifelse(dt$Cat17 == "dMarsh", "lightgoldenrod", "palegreen4"))),
+         col = ifelse(dt$Cat17== "bGhost", "brown3", 
+                      ifelse(dt$Cat96 == "cShrub", "burlywood4", 
+                             ifelse(dt$Cat96 == "dMarsh", "lightgoldenrod", "palegreen4"))),
          border = ifelse(dt$Cat17 == "bGhost", "brown3", 
-                         ifelse(dt$Cat17 == "cShrub", "burlywood4", 
-                                ifelse(dt$Cat17 == "dMarsh", "lightgoldenrod", "palegreen4"))),
-         gap.width = 0.1)
+                         ifelse(dt$Cat96 == "cShrub", "burlywood4", 
+                                ifelse(dt$Cat96 == "dMarsh", "darkgoldenrod", "palegreen4"))),
+         gap.width = 0.1, 
+         axis_labels = c("1996", "2010", "2017"), 
+         cex = 1, cex.axis = 1.5)
 
 ### fewer colors
 alluvial(dt[,1:3], freq = dt$freq, hide = dt$freq <10000,
@@ -255,5 +263,4 @@ alluvial(dt[,1:3], freq = dt$freq, hide = dt$freq <10000,
 
 
 
-cols <- c("palegreen4", "aquamarine3", "lightgoldenrod1", "brown3", "burlywood4", "gray80")
 
