@@ -143,14 +143,6 @@ ah <- vector()
 ai <- vector()
 
 
-##### so this is what you have to do
-##### run lines 155 through 356  **9 times through**
-##### replace numbers 1 through 9 for the value of "apple" (line 155 )
-##### after it runs, comment in the corresponding list from lines 348 through 356 to
-##### save the returned vectors, (should be length = 729)
-##### wash, rinse, repeat
-##### takes about 7 minutes to run it through each time...
-
 # writes out the list for m96 = 1
 {apple <- 1
 for (i in 1:9){
