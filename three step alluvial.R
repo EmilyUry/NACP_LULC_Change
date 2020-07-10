@@ -1,4 +1,13 @@
 
+setwd("C:/Users/eau6/Desktop/NACP_proj")
+
+library(sp)
+library(raster)
+library(rgdal)
+library(randomForest)
+library(rsample)
+library(sf)
+
 
 ## three step alluvial
 
