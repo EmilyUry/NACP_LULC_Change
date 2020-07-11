@@ -91,6 +91,13 @@ ggplot(r2d, aes(fill = type, y = hectares2, x = year)) +
   geom_bar(position = "stack", stat = "identity") +
   theme_classic()
 
+
+
+
+
+
+
+
 ### facet plot 
 cols <- c("palegreen4", "lightgoldenrod1", "brown3", "burlywood4", "gray80", "black")
 
@@ -103,6 +110,16 @@ area <- c(hectares1, hectares2)
 df <-  data.frame(type, year, region, area)
 
 df
+
+
+write.csv(df, "stackDATA3.csv")
+
+
+
+
+#### JUMP HERE WITH THE CODE IN LINE 121
+df <- read.csv("stackDATA3.csv")
+df$year <- as.factor(df$year)   ### remove this line if you want the years spaced out to scale
 
 a <- ggplot(df, aes(fill = reorder(type, area), y = area, x = year)) +
   geom_bar(position = "stack", stat = "identity") + 
