@@ -21,7 +21,7 @@ setwd("C:/Users/eau6/Desktop/NHD_data")
 
 library(rgdal)
 library(rgeos)
-
+library(plyr)
 
 ### Ftype key
 # Artificial <- c("558", "336")  ## artificial path, canal/ditch
@@ -31,8 +31,32 @@ library(rgeos)
 
 
 
+### these are the flowlength shapefiles (length in km is already associated with
+### each vector, so there is no need to project the data)
+### these each take a minute to read in
+H0303 <- readOGR("H0303_flowline.shp")
+H0304 <- readOGR("H0304_flowline.shp")
+H0302 <- readOGR("H0302_flowline.shp")
+H0315 <- readOGR("H0315_flowline.shp")
+H0306 <- readOGR("H0306_flowline.shp")
+H0305 <- readOGR("H0305_flowline.shp")
+H0307 <- readOGR("H0307_flowline.shp")
+H0317 <- readOGR("H0317_flowline.shp")
+H0316 <- readOGR("H0316_flowline.shp")
+H1308 <- readOGR("H1308_flowline.shp")
+H0301 <- readOGR("H0301_flowline.shp")
+
+H0311 <- readOGR("H0311_flowline.shp")
+H0314 <- readOGR("H0314_flowline.shp")
+H0313 <- readOGR("H0313_flowline.shp")
+
+
+HUCS <- crs(H0303) ## save the projection of the flowlines for later
+
 ##read in all of the watersheds of interest
 ## this is the catchment area shapefile
+## only takes a few seconds to read these in
+
 catchment <- readOGR("H0303_catchment.shp")
 catchment <- spTransform(catchment, proj4string(HUCs))
 catchment2 <- readOGR("H0304_catchment.shp")
@@ -56,29 +80,24 @@ catchment10 <- spTransform(catchment10, proj4string(HUCs))
 catchment11 <- readOGR("H0301_catchment.shp")
 catchment11 <- spTransform(catchment11, proj4string(HUCs))
 
-### these are the flowlength shapefiles (length in km is already associated with
-### each vector, so there is no need to project the data)
-H0303 <- readOGR("H0303_flowline.shp")
-H0304 <- readOGR("H0304_flowline.shp")
-H0302 <- readOGR("H0302_flowline.shp")
-H0315 <- readOGR("H0315_flowline.shp")
-H0306 <- readOGR("H0306_flowline.shp")
-H0305 <- readOGR("H0305_flowline.shp")
-H0307 <- readOGR("H0307_flowline.shp")
-H0317 <- readOGR("H0317_flowline.shp")
-H0316 <- readOGR("H0316_flowline.shp")
-H1308 <- readOGR("H1308_flowline.shp")
-H0301 <- readOGR("H0301_flowline.shp")
+catchment12 <- readOGR("H0311_catchment.shp")
+catchment12 <- spTransform(catchment12, proj4string(HUCs))
+catchment13 <- readOGR("H0314_catchment.shp")
+catchment13 <- spTransform(catchment13, proj4string(HUCs))
+catchment14 <- readOGR("H0313_catchment.shp")
+catchment14 <- spTransform(catchment14, proj4string(HUCs))
 
-watershed <- c("H0303", "H0304", "H0302", "H0315", "H0306", "H0305", "H0307", "H0317", "H0316", "H1308", "H0301")
+
+
+watershed <- c("H0303", "H0304", "H0302", "H0315", "H0306", "H0305", "H0307", "H0317", "H0316", "H1308", "H0301", "H0311", "H0314", "H0313")
 
 catchments <- c(catchment, catchment2, catchment3, catchment4, catchment5, catchment6, catchment7,
-                catchment8, catchment9, catchment10, catchment11)
+                catchment8, catchment9, catchment10, catchment11, catchment12, catchment13, catchment14)
 wsarea <- laply(catchments, gArea)
 wsarea <- wsarea*10000 ## km squared
 
 
-flowlines <- c(H0303, H0304, H0302, H0315, H0306, H0305, H0307, H0317, H0316, H1308, H0301)
+flowlines <- c(H0303, H0304, H0302, H0315, H0306, H0305, H0307, H0317, H0316, H1308, H0301, H0301, H0314, H0313)
 dlength <- sapply(flowlines, function(x) sum(x$LengthKM))  ## unit = km
 t.artificial <- sapply(flowlines, function(x) sum(x$LengthKM[x$FType == "558" |x$FType == "336"]))
 t.natural <- sapply(flowlines, function(x) sum(x$LengthKM[x$FType == "460"]))
@@ -90,7 +109,7 @@ summary <- list(watershed, wsarea, dlength, dlength/wsarea, t.artificial, t.natu
 names(summary) <- c("Watershed", "Area", "Length", "Drainage Density", "Artificial Channels", "Natural Channels", 
                     "Coastline", "Other")
 
-write.csv(summary, file = "drainage_density.csv")
+write.csv(summary, file = "drainage_density2.csv")
 
 ### map of all catchments
 HUCs <- readOGR("NACPHUCSexport.shp")
