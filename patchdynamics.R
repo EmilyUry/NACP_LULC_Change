@@ -46,15 +46,91 @@ head(data)
 names(data) <- c("x", "y", "m96", "m10", "m17", "region")
 
 
+### calculate total forested wetland area:
+
 nrow(data[which(data$m17 == 1 | data$m17 == 2),])*0.09/100 #area in km2
 nrow(data[which(data$m96 == 1 | data$m96 == 2),])*0.09/100
 nrow(data[which(data$m10 == 1 | data$m10 == 2),])*0.09/100
 
+
+### combine evergreen and deciduous classes == 1
+
+data$m96[which(data$m96 == 2)] <- 1
+data$m10[which(data$m10 == 2)] <- 1
+data$m17[which(data$m17 == 2)] <- 1
+
+### combine non-fores classes == 3
+
+data$m96[which(data$m96 == 4)] <- 3
+data$m10[which(data$m10 == 4)] <- 3
+data$m17[which(data$m17 == 4)] <- 3
+
+data$m96[which(data$m96 == 5)] <- 3
+data$m10[which(data$m10 == 5)] <- 3
+data$m17[which(data$m17 == 5)] <- 3
+
+data$m96[which(data$m96 == 6)] <- 3
+data$m10[which(data$m10 == 6)] <- 3
+data$m17[which(data$m17 == 6)] <- 3
+
+
+
+
+nrow(data[which(data$m17 == 1),])*0.09/100
+nrow(data[which(data$m10 == 1),])*0.09/100
+nrow(data[which(data$m96 == 1),])*0.09/100
+
+
+
+data$del <- ifelse(data$m96 == data$m17, 0, 1)
+
+
+floss <- data[which(data$m96 == 1 & data$del == 1), ]
+
+map196 <- data[, c(1,2,3)]
+mapc96 <- rasterFromXYZ(map196)
+plot(mapc96, col = c("black", "gray", "gray"))
+
+floss.map <- floss[,c(1,2,5)]
+map.floss <- rasterFromXYZ(floss.map)
+plot(map.floss, col = "red", add = T)
+
+
+
+##### cool map
+library(maps)
+par(mar = c(.1,.1,.1,.1))
+map(database = 'state', regions = c('North Carolina', 'Virginia'), col = "oldlace", fill = TRUE, border = NA)
+#this draws all PA counties since the regions argument uses partial matching
+map(database = 'county', regions = 'North Carolina', col = "black", fill = FALSE, add = TRUE)
+map(database = 'county', regions = 'Virginia', col = "black", fill = FALSE, add = TRUE)
+plot(mapc96, col = c("black", "gray", "gray"), add = TRUE, legend = F)
+plot(map.floss, col = "red", add = T, legend = F)
+
+
+
+
+
+
+
+
+
+
+
+
 df301 <- data[which(data$region == 1),]
+df302 <- data[which(data$region == 2),]
+
+df301$del <- ifelse(df301$m96 == df301$m17, 1, 0)
+
+df301.2017 <- df301[,c(1,2,5)]
 
 
-map301.2017 <- rasterFromXYZ(df)  #Convert first two columns as lon-lat and third as value                
-plot(dfr)
+
+map301.2017 <- rasterFromXYZ(df301.2017)  #Convert first two columns as lon-lat and third as value                
+plot(map301.2017, col = cols)
+cols <- c("black", "black", "gray", "gray", "gray", "gray")
+plot(map301.2017, col = cols)
 
 
 
@@ -62,8 +138,11 @@ plot(dfr)
 
 metrics <- calculate_lsm(map17, what = 'patch', progress = T, neighbourhood = 8)
 nrow(metrics[which(metrics$class == 1 | metrics$class == 2),])
-metrics$area_m2 <- metrics$value *111 *1000000
 
 
+
+
+metrics10 <- calculate_lsm(map10, what = 'patch', progress = T, neighbourhood = 8)
+nrow(metrics10[which(metrics10$class == 1 | metrics10$class == 2),])
 
 
