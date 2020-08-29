@@ -139,10 +139,37 @@ plot(map301.2017, col = cols)
 metrics <- calculate_lsm(map17, what = 'patch', progress = T, neighbourhood = 8)
 nrow(metrics[which(metrics$class == 1 | metrics$class == 2),])
 
+area17 <- metrics[which(metrics$metric == "area"),]
 
+## largest = 2.452313e-06
+
+write.csv(metrics, "patchMetrics2017.csv")
 
 
 metrics10 <- calculate_lsm(map10, what = 'patch', progress = T, neighbourhood = 8)
 nrow(metrics10[which(metrics10$class == 1 | metrics10$class == 2),])
+
+area10 <- metrics10[which(metrics10$metric == "area"),]
+## largest = 	3.717938e-06
+
+write.csv(metrics10, "patchMetrics2010.csv")
+
+
+
+
+
+
+metrics96 <- calculate_lsm(map96, what = 'patch', progress = T, neighbourhood = 8)
+nrow(metrics96[which(metrics96$class == 1 | metrics96$class == 2),])
+
+area96 <- metrics96[which(metrics96$metric == "area"),]
+## largest 1996 = 		3.645188e-06
+
+write.csv(metrics96, "patchMetrics1996.csv")
+
+
+
+
+
 
 
